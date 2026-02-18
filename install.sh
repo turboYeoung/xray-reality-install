@@ -149,7 +149,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
      {
        "protocol": "freedom",
       "settings": {
-        "domainStrategy": "UseIPv4v6"
+        "domainStrategy": "UseIPv4"
        },
         "tag": "direct"
      }
