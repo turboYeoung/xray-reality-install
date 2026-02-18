@@ -18,7 +18,7 @@ fi
 apt update
 apt install -y curl unzip openssl
 
-# ========= 安装 Xray（你指定的方式） =========
+# ========= 安装 Xray =========
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 # ========= 生成 Reality 密钥 =========
@@ -63,6 +63,15 @@ cat > /usr/local/etc/xray/config.json <<EOF
             "$SHORT_ID"
           ]
         }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ],
+        "routeOnly": true
       }
     }
   ],
@@ -90,5 +99,5 @@ echo "UUID     : $UUID"
 echo "Reality 公钥 : $PUBLIC_KEY"
 echo "shortId  : $SHORT_ID"
 echo "SNI      : $SERVER_NAME"
-echo "协议     : VLESS + TCP + Reality"
+echo "协议     : VLESS + TCP + Reality + Sniffing"
 echo "===================================="
