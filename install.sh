@@ -43,7 +43,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
         "clients": [
           {
             "id": "$UUID",
-            "flow": ""xtls-rprx-vision""
+            "flow": "xtls-rprx-vision"
           }
         ],
         "decryption": "none"
