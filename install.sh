@@ -59,6 +59,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
             "$SERVER_NAME"
           ],
           "privateKey": "$PRIVATE_KEY",
+          "maxTimeDiff": 0,
           "shortIds": [
             "$SHORT_ID"
           ]
@@ -99,5 +100,5 @@ echo "UUID     : $UUID"
 echo "Reality 公钥 : $PUBLIC_KEY"
 echo "shortId  : $SHORT_ID"
 echo "SNI      : $SERVER_NAME"
-echo "协议     : VLESS + TCP + Reality + Sniffing"
+echo "协议     : VLESS + TCP + Reality + vision"
 echo "===================================="
