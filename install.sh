@@ -100,7 +100,8 @@ cat > /usr/local/etc/xray/config.json <<EOF
      "outboundTag": "direct",
      "network": "udp,tcp"
      }
-  ],
+  ]
+  },
   "inbounds": [
     {
       "listen": "0.0.0.0",
