@@ -8,7 +8,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # ========= 端口设置（默认 443） =========
-read -p "请输入 Xray Reality 端口（默认 443）: " INPUT_PORT
+read -p "请输入 Xray Reality 端口（默认 443，不懂就回车）: " INPUT_PORT
 if [ -z "$INPUT_PORT" ]; then
   XRAY_PORT=443
 else
@@ -16,7 +16,7 @@ else
 fi
 
 # ========= Reality 域名设置（默认 www.icloud.com） =========
-read -p "请输入 Reality 伪装域名（默认 www.icloud.com）: " INPUT_DOMAIN
+read -p "请输入 Reality 伪装域名（默认 www.icloud.com，不懂就回车）: " INPUT_DOMAIN
 if [ -z "$INPUT_DOMAIN" ]; then
   DEST_DOMAIN="www.icloud.com"
   SERVER_NAME="www.icloud.com"
