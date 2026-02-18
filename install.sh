@@ -29,19 +29,26 @@ fi
 apt update
 apt install -y curl unzip openssl
 
-# ========= 启用 BBR + FQ =========
-echo ">>> 正在启用 BBR + FQ TCP 优化..."
+# ========= 检查并启用 BBR + FQ =========
+echo ">>> 检查 BBR + FQ 状态..."
 
-modprobe tcp_bbr || true
+CURRENT_CC=$(sysctl -n net.ipv4.tcp_congestion_control 2>/dev/null || echo "")
+CURRENT_QDISC=$(sysctl -n net.core.default_qdisc 2>/dev/null || echo "")
 
-cat >> /etc/sysctl.conf <<EOF
+if [[ "$CURRENT_CC" == "bbr" && "$CURRENT_QDISC" == "fq" ]]; then
+  echo "BBR + FQ 已启用，跳过设置"
+else
+  echo "未启用 BBR + FQ，正在设置..."
 
-# --- Xray Reality 推荐 TCP 优化 ---
+  modprobe tcp_bbr || true
+
+  cat > /etc/sysctl.d/99-xray-bbr.conf <<EOF
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 EOF
 
-sysctl -p
+  sysctl --system
+fi
 
 echo "当前拥塞控制算法: $(sysctl -n net.ipv4.tcp_congestion_control)"
 echo "当前队列算法    : $(sysctl -n net.core.default_qdisc)"
