@@ -117,25 +117,8 @@ cat > /usr/local/etc/xray/config.json <<EOF
   ]
  },
   "inbounds": [
-        {
-            "tag": "dokodemo-in",
-            "port": 443,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "address": "127.0.0.1",
-                "port": $XRAY_PORT,  
-                "network": "tcp"
-            },
-            "sniffing": { 
-                "enabled": true,
-                "destOverride": [
-                    "tls"
-                ],
-                "routeOnly": true
-            }
-        },
     {
-      "listen": "127.0.0.1",
+      "listen": "0.0.0.0",
       "port": $XRAY_PORT,
       "protocol": "vless",
       "settings": {
