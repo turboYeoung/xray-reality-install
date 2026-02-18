@@ -83,7 +83,14 @@ cat > /usr/local/etc/xray/config.json <<EOF
   "routing": {
     "domainStrategy": "IPIfNonMatch",
     "rules": [
-        {
+      {
+       "type": "field",
+       "domain": [
+         "geosite:category-ads-all"
+          ],
+       "outboundTag": "block"
+      },
+       {
       "type": "field",
       "domain": [
         "geosite:apple",
@@ -91,6 +98,13 @@ cat > /usr/local/etc/xray/config.json <<EOF
       ],
       "outboundTag": "direct"
     },
+     {
+       "type": "field",
+         "protocol": [
+           "bittorrent"
+          ],
+        "outboundTag": "block"
+       },
       {
         "type": "field",
         "ip": [
