@@ -70,8 +70,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
 "dns": {
     "servers": [
      "8.8.8.8",
-      "1.1.1.1",
-      "localhost"
+      "1.1.1.1"
     ]
   },
   "routing": {
