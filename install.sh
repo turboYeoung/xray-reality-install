@@ -64,9 +64,12 @@ KEYS=$(xray x25519)
 PRIVATE_KEY=$(echo "$KEYS" | grep '^PrivateKey:' | cut -d':' -f2 | tr -d ' ')
 PUBLIC_KEY=$(echo "$KEYS" | grep '^Password:' | cut -d':' -f2 | tr -d ' ')
 
-# ========= shortIds（官方规范） =========
-SHORT_ID=$(openssl rand -hex 4)
+# shortId：3~8 字节（6~16 hex chars，步进 2）
+SHORT_ID_LEN_BYTES=$((RANDOM % 6 + 3))   # 3~8
+SHORT_ID=$(openssl rand -hex "$SHORT_ID_LEN_BYTES")
 SHORT_IDS_JSON="[\"\", \"$SHORT_ID\"]"
+
+
 
 # ========= 写入配置 =========
 cat > /usr/local/etc/xray/config.json <<EOF
@@ -197,7 +200,7 @@ systemctl is-active --quiet xray && echo "Xray 运行正常" || echo "❌ Xray �
 SERVER_IP=$(curl -s https://api.ipify.org || curl -s https://ip.sb)
 
 # ========= 生成 v2rayN 链接 =========
-VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#KIM@vless-Reality-vison"
+VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#KIM@vless-reality-vison"
 
 # ========= 输出 =========
 echo "===================================="
