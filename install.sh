@@ -76,6 +76,14 @@ cat > /usr/local/etc/xray/config.json <<EOF
   "routing": {
     "domainStrategy": "IPIfNonMatch",
     "rules": [
+        {
+      "type": "field",
+      "domain": [
+        "geosite:apple",
+        "geosite:microsoft"
+      ],
+      "outboundTag": "direct"
+    },
       {
         "type": "field",
         "ip": [
