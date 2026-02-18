@@ -1,12 +1,10 @@
 #!/bin/bash
-
 set -e
 
 # ========= 固定参数 =========
 XRAY_PORT=443
 DEST_DOMAIN="www.icloud.com"
 SERVER_NAME="www.icloud.com"
-UUID=$(cat /proc/sys/kernel/random/uuid)
 
 # ========= root 检查 =========
 if [ "$EUID" -ne 0 ]; then
@@ -21,10 +19,13 @@ apt install -y curl unzip openssl
 # ========= 安装 Xray =========
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
-# ========= 生成 Reality 密钥 =========
+# ========= 生成 UUID（官方方式） =========
+UUID=$(xray uuid)
+
+# ========= 生成 Reality 密钥（完全对齐官方输出） =========
 KEYS=$(xray x25519)
-PRIVATE_KEY=$(echo "$KEYS" | awk '/Private key/ {print $3}')
-PUBLIC_KEY=$(echo "$KEYS" | awk '/Public key/ {print $3}')
+PRIVATE_KEY=$(echo "$KEYS" | grep '^PrivateKey:' | cut -d':' -f2 | tr -d ' ')
+PUBLIC_KEY=$(echo "$KEYS" | grep '^Password:'   | cut -d':' -f2 | tr -d ' ')
 
 # ========= shortId =========
 SHORT_ID=$(openssl rand -hex 8)
@@ -37,6 +38,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
   },
   "inbounds": [
     {
+      "listen": "0.0.0.0",
       "port": $XRAY_PORT,
       "protocol": "vless",
       "settings": {
@@ -59,7 +61,6 @@ cat > /usr/local/etc/xray/config.json <<EOF
             "$SERVER_NAME"
           ],
           "privateKey": "$PRIVATE_KEY",
-          "maxTimeDiff": 0,
           "shortIds": [
             "$SHORT_ID"
           ]
@@ -79,6 +80,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
   "outbounds": [
     {
       "protocol": "freedom",
+      "tag": "direct",
       "settings": {}
     }
   ]
@@ -100,5 +102,6 @@ echo "UUID     : $UUID"
 echo "Reality 公钥 : $PUBLIC_KEY"
 echo "shortId  : $SHORT_ID"
 echo "SNI      : $SERVER_NAME"
+echo "flow     : xtls-rprx-vision"
 echo "协议     : VLESS + TCP + Reality + vision"
 echo "===================================="
