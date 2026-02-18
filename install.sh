@@ -29,6 +29,23 @@ fi
 apt update
 apt install -y curl unzip openssl
 
+# ========= 启用 BBR + FQ =========
+echo ">>> 正在启用 BBR + FQ TCP 优化..."
+
+modprobe tcp_bbr || true
+
+cat >> /etc/sysctl.conf <<EOF
+
+# --- Xray Reality 推荐 TCP 优化 ---
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+EOF
+
+sysctl -p
+
+echo "当前拥塞控制算法: $(sysctl -n net.ipv4.tcp_congestion_control)"
+echo "当前队列算法    : $(sysctl -n net.core.default_qdisc)"
+
 # ========= 安装 Xray =========
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
@@ -41,7 +58,7 @@ PRIVATE_KEY=$(echo "$KEYS" | grep '^PrivateKey:' | cut -d':' -f2 | tr -d ' ')
 PUBLIC_KEY=$(echo "$KEYS" | grep '^Password:' | cut -d':' -f2 | tr -d ' ')
 
 # ========= shortIds（官方规范） =========
-SHORT_ID=$(openssl rand -hex 4)     # 8 位 hex
+SHORT_ID=$(openssl rand -hex 4)
 SHORT_IDS_JSON="[\"\", \"$SHORT_ID\"]"
 
 # ========= 写入配置 =========
@@ -104,15 +121,18 @@ systemctl daemon-reload
 systemctl enable xray
 systemctl restart xray
 
+sleep 1
+systemctl is-active --quiet xray && echo "Xray 运行正常" || echo "❌ Xray 启动失败"
+
 # ========= 获取服务器 IP =========
-SERVER_IP=$(curl -s https://api.ipify.org)
+SERVER_IP=$(curl -s https://api.ipify.org || curl -s https://ip.sb)
 
 # ========= 生成 v2rayN 链接 =========
 VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#Xray-Reality"
 
 # ========= 输出 =========
 echo "===================================="
-echo " Xray Reality 已安装完成"
+echo " Xray Reality 已安装完成（BBR + FQ 已启用）"
 echo "------------------------------------"
 echo "服务器IP : $SERVER_IP"
 echo "端口     : $XRAY_PORT"
