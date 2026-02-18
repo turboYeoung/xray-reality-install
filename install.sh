@@ -67,6 +67,40 @@ cat > /usr/local/etc/xray/config.json <<EOF
   "log": {
     "loglevel": "warning"
   },
+  "dns": {
+    "servers": [
+     "8.8.8.8",
+     "1.1.1.1",
+     "localhost"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:cn"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "port": "443",
+        "network": "udp",
+        "outboundTag": "block"
+      },
+     {
+      "type": "field",
+     "outboundTag": "direct",
+     "network": "udp,tcp"
+     }
+  ],
   "inbounds": [
     {
       "listen": "0.0.0.0",
@@ -108,11 +142,17 @@ cat > /usr/local/etc/xray/config.json <<EOF
   ],
   "outbounds": [
     {
-      "protocol": "freedom",
-      "tag": "direct",
-      "settings": {}
-    }
-  ]
+      "protocol": "blackhole",
+      "tag": "block"
+    },
+     {
+       "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4v6"
+       },
+        "tag": "direct"
+     }
+    ]
 }
 EOF
 
