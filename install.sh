@@ -67,11 +67,13 @@ cat > /usr/local/etc/xray/config.json <<EOF
   "log": {
     "loglevel": "warning"
   },
-  "dns": {
+"dns": {
     "servers": [
      "8.8.8.8",
-     "1.1.1.1",
-     "localhost"
+      "1.1.1.1",
+      "2001:4860:4860::8888",
+      "2606:4700:4700::1111",
+      "localhost"
     ]
   },
   "routing": {
@@ -101,7 +103,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
      "network": "udp,tcp"
      }
   ]
-  },
+ },
   "inbounds": [
     {
       "listen": "0.0.0.0",
@@ -141,7 +143,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
       }
     }
   ],
-  "outbounds": [
+    "outbounds": [
     {
       "protocol": "blackhole",
       "tag": "block"
