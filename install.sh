@@ -197,7 +197,7 @@ systemctl is-active --quiet xray && echo "Xray 运行正常" || echo "❌ Xray �
 SERVER_IP=$(curl -s https://api.ipify.org || curl -s https://ip.sb)
 
 # ========= 生成 v2rayN 链接 =========
-VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#Xray-Reality"
+VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#KIM@vless-Reality-vison"
 
 # ========= 输出 =========
 echo "===================================="
