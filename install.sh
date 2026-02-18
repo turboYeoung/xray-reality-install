@@ -41,7 +41,7 @@ PRIVATE_KEY=$(echo "$KEYS" | grep '^PrivateKey:' | cut -d':' -f2 | tr -d ' ')
 PUBLIC_KEY=$(echo "$KEYS" | grep '^Password:' | cut -d':' -f2 | tr -d ' ')
 
 # ========= shortIds（官方规范） =========
-SHORT_ID=$(openssl rand -hex 4)   # 8 位 hex
+SHORT_ID=$(openssl rand -hex 4)     # 8 位 hex
 SHORT_IDS_JSON="[\"\", \"$SHORT_ID\"]"
 
 # ========= 写入配置 =========
@@ -104,16 +104,27 @@ systemctl daemon-reload
 systemctl enable xray
 systemctl restart xray
 
-# ========= 输出信息 =========
+# ========= 获取服务器 IP =========
+SERVER_IP=$(curl -s https://api.ipify.org)
+
+# ========= 生成 v2rayN 链接 =========
+VLESS_LINK="vless://${UUID}@${SERVER_IP}:${XRAY_PORT}?encryption=none&flow=xtls-rprx-vision&security=reality&sni=${SERVER_NAME}&fp=chrome&pbk=${PUBLIC_KEY}&sid=${SHORT_ID}&type=tcp#Xray-Reality"
+
+# ========= 输出 =========
 echo "===================================="
-echo "Xray Reality 已安装完成"
-echo ""
-echo "服务器IP : 你的服务器IP"
+echo " Xray Reality 已安装完成"
+echo "------------------------------------"
+echo "服务器IP : $SERVER_IP"
 echo "端口     : $XRAY_PORT"
 echo "UUID     : $UUID"
-echo "Reality 公钥 : $PUBLIC_KEY"
-echo "shortIds : $SHORT_IDS_JSON"
+echo "Reality 公钥 (pbk): $PUBLIC_KEY"
+echo "shortId  : $SHORT_ID"
 echo "SNI      : $SERVER_NAME"
 echo "flow     : xtls-rprx-vision"
-echo "协议     : VLESS + TCP + Reality + xtls-rprx-vision"
+echo "------------------------------------"
+echo "v2rayN 节点链接（可直接复制）："
+echo ""
+echo "$VLESS_LINK"
+echo ""
+echo "v2rayN → 从剪贴板导入即可使用"
 echo "===================================="
