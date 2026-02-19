@@ -220,3 +220,31 @@ echo "$VLESS_LINK"
 echo ""
 echo "v2rayN → 从剪贴板导入即可使用"
 echo "===================================="
+echo ""
+echo "============= 本地节点 JSON（sing-box / Clash Meta） ============="
+cat <<EOF
+{
+  "type": "vless",
+  "tag": "KIM-Reality-VLESS",
+  "server": "${SERVER_IP}",
+  "server_port": ${XRAY_PORT},
+  "uuid": "${UUID}",
+  "packet_encoding": "xudp",
+  "flow": "xtls-rprx-vision",
+  "tls": {
+    "enabled": true,
+    "server_name": "${SERVER_NAME}",
+    "utls": {
+      "enabled": true,
+      "fingerprint": "chrome"
+    },
+    "reality": {
+      "enabled": true,
+      "public_key": "${PUBLIC_KEY}",
+      "short_id": "${SHORT_ID}"
+    }
+  }
+}
+EOF
+echo "==================================================================="
+
