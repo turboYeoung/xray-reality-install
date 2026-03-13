@@ -96,8 +96,7 @@ cat > /usr/local/etc/xray/config.json <<EOF
        {
       "type": "field",
       "domain": [
-        "geosite:apple-cn",
-        "geosite:microsoft@cn"
+        "geosite:apple-cn"
       ],
       "outboundTag": "block"
     },
