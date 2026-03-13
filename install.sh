@@ -93,13 +93,6 @@ cat > /usr/local/etc/xray/config.json <<EOF
           ],
        "outboundTag": "block"
       },
-       {
-      "type": "field",
-      "domain": [
-        "geosite:cn"
-      ],
-      "outboundTag": "block"
-    },
      {
        "type": "field",
          "protocol": [
